@@ -46,9 +46,25 @@ public class Heap
      * Insert (key,info) into the heap and return the newly generated HeapNode.
      *
      */
-    public HeapNode insert(int key, String info) 
-    {    
-        return null; // should be replaced by student code
+    public HeapNode insert(int key, String info) { //finished, tested
+        this.size++;
+        this.roots++;
+        HeapNode result = new HeapNode();
+        result.key = key;
+        result.info = info;
+        // Add the new node to the roots array
+        if (this.min == null) {
+            this.min = result;
+        } else{
+            this.min.prev.next = result;
+            result.prev = this.min.prev;
+            this.min.prev = result;
+            result.next = this.min;
+        }
+        if (key < this.min.key) {
+            this.min = result;
+        }
+        return result;
     }
 
     /**
