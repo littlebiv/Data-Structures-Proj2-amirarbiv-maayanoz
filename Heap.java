@@ -314,4 +314,36 @@ public class Heap
         public HeapNode parent;
         public int rank;
     }
+
+    public static void main(String[] args) { //test insert and findMin
+        // Heap heap = new Heap(true, false);
+        // heap.insert(5, "five");
+        // heap.insert(3, "three");
+        // heap.insert(7, "seven");
+        // HeapNode minNode = heap.findMin();
+        // System.out.println("Min key: " + minNode.key + ", info: " + minNode.info); // Expected: Min key: 3, info: three
+        // HeapNode start = heap.min;
+        // System.out.println("Root list:");
+        // while (true) {
+        //     System.out.println("Key: " + start.key + ", info: " + start.info);
+        //     start = start.next;
+        //     if (start == heap.min) {
+        //         break;
+        //     }
+        // }
+        // heap.decreaseKey(heap.min.next, 4); // Decrease key from 5 to 1
+        // HeapNode minNode2 = heap.findMin();
+        // System.out.println("Min key: " + minNode2.key + ", info: " + minNode2.info); // Expected: Min key: 1, info: five
+        // HeapNode start2 = heap.min;
+        // System.out.println("Root list:");
+        // while (true) {
+        //     System.out.println("Key: " + start2.key + ", info: " + start2.info);
+        //     start2 = start2.next;
+        //     if (start2 == heap.min) {
+        //         break;
+        //     }
+        // }
+        //test heapifyUp
+        //build a small heap manually
+    }
 }
