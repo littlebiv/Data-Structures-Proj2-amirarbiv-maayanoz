@@ -234,6 +234,9 @@ public class Heap
         String p_val = x.parent.info;
         int x_key = x.key;
         String x_val = x.info;
+        int x_rank = x.rank;
+        x.rank = x.parent.rank;
+        x.parent.rank = x_rank;
         x.parent.key = x_key;
         x.parent.info = x_val;
         x.key = p_key;
