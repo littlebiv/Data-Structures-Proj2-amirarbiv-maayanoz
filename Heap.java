@@ -140,7 +140,7 @@ public class Heap
      * Decrease the key of x by diff and fix the heap.
      * 
      */
-    public void decreaseKey(HeapNode x, int diff){ //finished, not tested
+    public void decreaseKey(HeapNode x, int diff){ //finished, tested
         x.key -= diff;
         if (x.parent == null) {
             this.min = this.findMin();
@@ -150,6 +150,7 @@ public class Heap
             // cut x from its parent
             if (this.lazyDecreaseKeys) {
                 cut(x);
+                cascadingCuts(x.parent);
             }
             else{
                //non-lazy decrease key
