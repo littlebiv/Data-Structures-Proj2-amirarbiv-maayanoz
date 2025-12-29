@@ -138,6 +138,41 @@ public class Heap
         }
     }
 
+    private void cut(HeapNode x) { //helping method, cuts and melds back
+        // cut x from its parent and add it to the root list
+                this.totalCuts++;
+                //taking care of current heap
+                //updating x's siblings pointers
+                if (x.next != x) { //if x is not alone in its list
+                    if(x.prev != x.next){ //if x has more than one sibling
+                    x.next.prev = x.prev;
+                    x.prev.next = x.next;
+                    }
+                else{ //if x has only one sibling
+                    x.next.next = x.next;
+                    x.next.prev = x.next;
+                }
+                }
+                else{ //if x is alone in its list
+                    //do nothing
+                }
+                //updating x's parent's child pointer
+                x.parent.rank = x.parent.rank - 1 - x.rank;
+                if (x.parent.child == x) { //if x is a child
+                    if (x.next != x) { //if x has siblings
+                        x.parent.child = x.next;
+                    }
+                    else{ //if x has no siblings
+                        x.parent.child = null;
+                    }
+                }
+                //melding cutted tree
+                Heap to_meld = new Heap(this.lazyMelds, this.lazyDecreaseKeys);
+                to_meld.roots[0] = x;
+                to_meld.min = x;
+                this.meld(to_meld);
+            }
+    
 
     /**
      * 
