@@ -46,7 +46,7 @@ public class Heap
      * Insert (key,info) into the heap and return the newly generated HeapNode.
      *
      */
-    public HeapNode insert(int key, String info) { //finished, tested
+    public HeapNode insert(int key, String info){ //finished, tested
         this.size++;
         this.roots++;
         HeapNode result = new HeapNode();
@@ -56,13 +56,9 @@ public class Heap
         if (this.min == null) {
             this.min = result;
         } else{
-            this.min.prev.next = result;
-            result.prev = this.min.prev;
-            this.min.prev = result;
-            result.next = this.min;
-        }
-        if (key < this.min.key) {
-            this.min = result;
+            Heap to_meld = new Heap(this.lazyMelds, this.lazyDecreaseKeys);
+            to_meld.min = result;
+            this.meld(to_meld);
         }
         return result;
     }
