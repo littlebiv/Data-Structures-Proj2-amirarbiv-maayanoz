@@ -109,10 +109,15 @@ public class Heap
      * Decrease the key of x by diff and fix the heap.
      * 
      */
-    public void decreaseKey(HeapNode x, int diff) 
-    {    
-        return; // should be replaced by student code
+    private void heapifyUp(HeapNode x) { //helping method, tested
+        // heapify up until x is smaller than two its children
+        while (x.parent != null && x.key < x.parent.key) {
+            swapWithParent(x);
+            x = x.parent;
+            totalHeapifyCosts++;
+        }
     }
+
 
     /**
      * 
