@@ -250,7 +250,7 @@ public class Heap
      * Delete the x from the heap.
      *
      */
-    public void delete(HeapNode x){
+    public void delete(HeapNode x){ //just like in class
         decreaseKey(x, Integer.MIN_VALUE);
         deleteMin();
     }
@@ -262,9 +262,8 @@ public class Heap
      * pre: heap2.lazyMelds = this.lazyMelds AND heap2.lazyDecreaseKeys = this.lazyDecreaseKeys
      *
      */
-    public void lazyMeld(Heap heap2){ //finished, not tested
-        //used if lazy melds is true
-        this.size += heap2.size;
+    public void meld(Heap heap2){ //finished, not tested
+        this.size += heap2.size; //true for both lazy and non-lazy melds
         this.numMarked += heap2.numMarked;
         this.totalLinks += heap2.totalLinks;
         this.totalCuts += heap2.totalCuts;
