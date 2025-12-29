@@ -269,6 +269,18 @@ public class Heap
         this.totalCuts += heap2.totalCuts;
         this.totalHeapifyCosts += heap2.totalHeapifyCosts;
 
+        if (lazyMelds){
+            lazyMeld(heap2);
+            this.roots = this.roots + heap2.roots;
+        }
+        else{
+            this.succsesive_linking(heap2);
+        }
+    }
+
+
+    public void lazyMeld(Heap heap2){ //finished, tested
+        //used if lazy melds is true
         //updating roots pointers
         if (this.min == null){ //if this heap is empty
             this.roots = heap2.roots;
