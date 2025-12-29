@@ -301,6 +301,104 @@ public class Heap
         }
     }
     
+
+    public void succsesive_linking(Heap heap){ //performs succesive linking in-place, not tested
+        //count number of links
+        //used if lazy melds is false
+        //used in deleteMin
+        //consolidate trees of same rank in the roots list
+        HeapNode[] rootsArray = new HeapNode[heap.roots]; //array to store trees by rank
+        HeapNode curr = heap.min;
+        if (curr == null) {
+            return;
+        }
+        for (int i = 0; i < heap.roots; i++) {
+            rootsArray[i] = curr;
+            curr = curr.next;
+        }
+        //perform linking
+        HeapNode[] rankArray = new HeapNode[heap.roots*2]; //array to store trees by rank
+        for (HeapNode node : rootsArray) {
+            add_to_rank_array(node, rankArray);
+        }
+        //rebuild the roots list from rankArray
+        int index = 0;
+        for (int i = 0; i < rankArray.length; i++) {
+            if (rankArray[i] != null) {
+                heap.min = rankArray[i];
+                index = i;
+                break;
+            }
+        }
+        curr = heap.min;
+        if (curr == null) {
+            return;
+        }
+        this.roots = 1;
+        for(int i = index+1; i < rankArray.length; i++) {
+            if (rankArray[i] == null) {
+                continue;
+            }
+            roots++;
+            if (rankArray[i] == heap.min){ //not supposed to happen but just in case something goes wrong
+                heap.min.prev = curr;
+                curr.next = heap.min;
+                break;
+            }
+            curr.next = rankArray[i];
+            rankArray[i].prev = curr;
+            curr = rankArray[i];
+            
+        }
+
+        //previous buggy attempt
+
+        // HeapNode[] rankArray = new HeapNode[heap.size*2]; //array to store trees by rank
+        // HeapNode curr = heap.min;
+        // if (curr == null) {
+        //     return;
+        // }
+        // HeapNode[] tester = new HeapNode[heap.size*2];
+        // while (true) {
+        //     add_to_rank_array(curr, rankArray); //bug here
+        //     curr = curr.next;
+        //     if (tester == rankArray) {
+        //         break;
+        //     }
+        //     tester = rankArray;
+        // }
+        // //rebuild the roots list from rankArray
+        // heap.min = heap.findMin();
+        // if (rankArray.length == 1) {
+        //     return;
+        // }
+        // curr = heap.min;
+        // for(int i = 1; i < rankArray.length; i++) {
+        //     if (rankArray[i] == null) {
+        //         continue;
+        //     }
+        //     if (rankArray[i] == heap.min){
+        //         break;
+        //     }
+        //     curr.next = rankArray[i];
+        //     rankArray[i].prev = curr;
+        //     curr = rankArray[i];
+            
+        // }
+        // //counting roots in rankArray, without empty slots
+        // this.roots = 0;
+        // curr = heap.min;
+        // while (true) {
+        //     if (curr == null) {
+        //         continue;
+        //     }
+        //     this.roots++;
+        //     curr = curr.next;
+        //     if (curr == heap.min) {
+        //         break;
+        //     }
+        // }
+    }
     /**
      * 
      * Return the number of elements in the heap
