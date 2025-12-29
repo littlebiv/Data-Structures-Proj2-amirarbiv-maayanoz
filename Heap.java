@@ -161,6 +161,19 @@ public class Heap
         this.min = new_min;
     }
 
+    private void cascadingCuts(HeapNode y) { //helping method for decrease key, not tested
+        if (y.parent == null) {
+            return;
+        }
+        if (!y.marked) {
+            y.marked = true;
+            this.numMarked++;
+        } else {
+            cut(y);
+            cascadingCuts(y.parent);
+        }
+    }
+
     private void heapifyUp(HeapNode x) { //helping method, tested
         // heapify up until x is smaller than two its children
         while (x.parent != null && x.key < x.parent.key) {
