@@ -170,6 +170,8 @@ public class Heap
             this.numMarked++;
         } else {
             cut(y);
+            y.marked = false;
+            this.numMarked--;
             cascadingCuts(y.parent);
         }
     }
