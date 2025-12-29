@@ -183,7 +183,7 @@ public class Heap
         }
     }
 
-    private void cut(HeapNode x) { //helping method, cuts and melds back
+    private void cut(HeapNode x) { //helping method, cuts and melds back, tested
         // cut x from its parent and add it to the root list
                 this.totalCuts++;
                 //taking care of current heap
@@ -212,8 +212,10 @@ public class Heap
                     }
                 }
                 //melding cutted tree
+                x.parent = null;
+                x.next = x;
+                x.prev = x;
                 Heap to_meld = new Heap(this.lazyMelds, this.lazyDecreaseKeys);
-                to_meld.roots[0] = x;
                 to_meld.min = x;
                 this.meld(to_meld);
             }
