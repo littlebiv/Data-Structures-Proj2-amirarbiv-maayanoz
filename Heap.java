@@ -569,199 +569,199 @@ public class Heap
         public boolean marked = false;
     }
 
-    // ============================================================
-    //               TESTING SECTION (Main & Helpers)
-    // ============================================================
+    // // ============================================================
+    // //               TESTING SECTION (Main & Helpers)
+    // // ============================================================
 
-    public static void main(String[] args) {
-        System.out.println("--- Starting Internal Tests for Heap ---");
+    // public static void main(String[] args) {
+    //     System.out.println("--- Starting Internal Tests for Heap ---");
         
-        testBasicOperations();
-        testDeleteMinAndLinks();
-        testDecreaseKeyAndCuts();
-        testDeleteArbitrary();
-        testMeldHeaps();
+    //     testBasicOperations();
+    //     testDeleteMinAndLinks();
+    //     testDecreaseKeyAndCuts();
+    //     testDeleteArbitrary();
+    //     testMeldHeaps();
         
-        System.out.println("\n--- All Tests Finished ---");
-    }
+    //     System.out.println("\n--- All Tests Finished ---");
+    // }
 
-    private static void testBasicOperations() {
-        System.out.print("Test 1: Basic Insert, Min, Size... ");
-        // Initialize with both lazy flags true (standard Fibonacci Heap behavior)
-        Heap heap = new Heap(true, true);
+    // private static void testBasicOperations() {
+    //     System.out.print("Test 1: Basic Insert, Min, Size... ");
+    //     // Initialize with both lazy flags true (standard Fibonacci Heap behavior)
+    //     Heap heap = new Heap(true, true);
         
-        if (heap.min != null) {
-            printFail("Heap should be empty initially"); return;
-        }
+    //     if (heap.min != null) {
+    //         printFail("Heap should be empty initially"); return;
+    //     }
 
-        heap.insert(10, "ten");
-        HeapNode five = heap.insert(5, "five");
-        heap.insert(20, "twenty");
+    //     heap.insert(10, "ten");
+    //     HeapNode five = heap.insert(5, "five");
+    //     heap.insert(20, "twenty");
 
-        if (heap.size() != 3) {
-            printFail("Size should be 3, got " + heap.size()); return;
-        }
+    //     if (heap.size() != 3) {
+    //         printFail("Size should be 3, got " + heap.size()); return;
+    //     }
         
-        if (heap.findMin().key != 5) {
-            printFail("Min should be 5"); return;
-        }
+    //     if (heap.findMin().key != 5) {
+    //         printFail("Min should be 5"); return;
+    //     }
         
-        if (heap.numTrees() != 3) {
-            // In lazy insert, every insert adds a new tree until consolidate
-            printFail("Should have 3 trees (roots) before any consolidation"); return;
-        }
+    //     if (heap.numTrees() != 3) {
+    //         // In lazy insert, every insert adds a new tree until consolidate
+    //         printFail("Should have 3 trees (roots) before any consolidation"); return;
+    //     }
 
-        System.out.println("PASS");
-    }
+    //     System.out.println("PASS");
+    // }
 
-    private static void testDeleteMinAndLinks() {
-        System.out.print("Test 2: DeleteMin & Successive Linking... ");
-        Heap heap = new Heap(true, true);
-        // Inserting 9 elements (0 to 8)
-        for (int i = 8; i >= 0; i--) {
-            heap.insert(i, "val" + i);
-        }
-        // Current state: 9 roots, min is 0.
-        int initialLinks = heap.totalLinks();
-        heap.deleteMin(); // Deletes 0. Should trigger successive linking.
-        if (heap.size() != 8) {
-            printFail("Size should be 8 after deleteMin"); return;
-        }
-        if (heap.findMin().key != 1) {
-            printFail("New min should be 1"); return;
-        }
-        // Check if linking happened
-        if (heap.totalLinks() <= initialLinks) {
-            printFail("Total links should increase after deleteMin (consolidation)"); return;
-        }
-        // For 8 nodes, typically we expect 1 tree (binomial tree B3) if fully consolidated
-        // Depending on implementation details, it might vary, but roots should decrease significantly
-        if (heap.numTrees() >= 8) {
-            printFail("Number of trees should decrease after consolidation"); return;
-        }
+    // private static void testDeleteMinAndLinks() {
+    //     System.out.print("Test 2: DeleteMin & Successive Linking... ");
+    //     Heap heap = new Heap(true, true);
+    //     // Inserting 9 elements (0 to 8)
+    //     for (int i = 8; i >= 0; i--) {
+    //         heap.insert(i, "val" + i);
+    //     }
+    //     // Current state: 9 roots, min is 0.
+    //     int initialLinks = heap.totalLinks();
+    //     heap.deleteMin(); // Deletes 0. Should trigger successive linking.
+    //     if (heap.size() != 8) {
+    //         printFail("Size should be 8 after deleteMin"); return;
+    //     }
+    //     if (heap.findMin().key != 1) {
+    //         printFail("New min should be 1"); return;
+    //     }
+    //     // Check if linking happened
+    //     if (heap.totalLinks() <= initialLinks) {
+    //         printFail("Total links should increase after deleteMin (consolidation)"); return;
+    //     }
+    //     // For 8 nodes, typically we expect 1 tree (binomial tree B3) if fully consolidated
+    //     // Depending on implementation details, it might vary, but roots should decrease significantly
+    //     if (heap.numTrees() >= 8) {
+    //         printFail("Number of trees should decrease after consolidation"); return;
+    //     }
 
-        System.out.println("PASS");
-    }
+    //     System.out.println("PASS");
+    // }
 
-    private static void testDecreaseKeyAndCuts() {
-        System.out.print("Test 3: DecreaseKey & Cuts... ");
-        Heap heap = new Heap(true, true); // Lazy
+    // private static void testDecreaseKeyAndCuts() {
+    //     System.out.print("Test 3: DecreaseKey & Cuts... ");
+    //     Heap heap = new Heap(true, true); // Lazy
         
-        HeapNode n100 = heap.insert(100, "100");
-        HeapNode n50 = heap.insert(50, "50");
-        HeapNode n10 = heap.insert(10, "10"); // Min
+    //     HeapNode n100 = heap.insert(100, "100");
+    //     HeapNode n50 = heap.insert(50, "50");
+    //     HeapNode n10 = heap.insert(10, "10"); // Min
         
-        // Force a structure where n100 is child of n50 (requires deleteMin)
-        heap.deleteMin(); // deletes 10. n100 and n50 should consolidate.
+    //     // Force a structure where n100 is child of n50 (requires deleteMin)
+    //     heap.deleteMin(); // deletes 10. n100 and n50 should consolidate.
         
-        // We need to find who is the parent. 
-        // Logic: 50 < 100, so 50 should be root, 100 should be child.
-        if (n100.parent != n50) {
-             // In case the linking order is different or they didn't merge yet (depends on size)
-             // Let's force a scenario we can control better or just trust the decreaseKey logic
-             // If n100 is not a child, we can't test "Cut".
-        }
+    //     // We need to find who is the parent. 
+    //     // Logic: 50 < 100, so 50 should be root, 100 should be child.
+    //     if (n100.parent != n50) {
+    //          // In case the linking order is different or they didn't merge yet (depends on size)
+    //          // Let's force a scenario we can control better or just trust the decreaseKey logic
+    //          // If n100 is not a child, we can't test "Cut".
+    //     }
         
-        // Let's create a simpler scenario for decrease key cuts
-        // We will insert elements, delete min to build a tree, then decrease a child's key
+    //     // Let's create a simpler scenario for decrease key cuts
+    //     // We will insert elements, delete min to build a tree, then decrease a child's key
         
-        heap = new Heap(true, true);
-        HeapNode a = heap.insert(20, "a");
-        HeapNode b = heap.insert(10, "b"); // min
-        heap.insert(30, "c");
+    //     heap = new Heap(true, true);
+    //     HeapNode a = heap.insert(20, "a");
+    //     HeapNode b = heap.insert(10, "b"); // min
+    //     heap.insert(30, "c");
         
-        heap.deleteMin(); // deletes 10. 20 and 30 should merge. 20 becomes parent of 30.
+    //     heap.deleteMin(); // deletes 10. 20 and 30 should merge. 20 becomes parent of 30.
         
-        // Assume 30 is child of 20 (since 20 < 30)
-        HeapNode childNode = null;
-        if (a.child != null) childNode = a.child; // The child of 20
-        else if (heap.findMin() == a && a.next != a) {
-             // Maybe they didn't merge? (e.g. if rank array logic skipped)
-             // Retry with guaranteed merge size
-        }
+    //     // Assume 30 is child of 20 (since 20 < 30)
+    //     HeapNode childNode = null;
+    //     if (a.child != null) childNode = a.child; // The child of 20
+    //     else if (heap.findMin() == a && a.next != a) {
+    //          // Maybe they didn't merge? (e.g. if rank array logic skipped)
+    //          // Retry with guaranteed merge size
+    //     }
         
-        // We'll proceed with a standard decreaseKey test that simply checks values
-        // and ensures no crash, verifying cuts count if possible.
-        int cutsBefore = heap.totalCuts();
+    //     // We'll proceed with a standard decreaseKey test that simply checks values
+    //     // and ensures no crash, verifying cuts count if possible.
+    //     int cutsBefore = heap.totalCuts();
         
-        // Decrease 20 to 5 (making it new min)
-        heap.decreaseKey(a, 15); // 20 - 15 = 5
+    //     // Decrease 20 to 5 (making it new min)
+    //     heap.decreaseKey(a, 15); // 20 - 15 = 5
         
-        if (heap.findMin().key != 5) {
-            printFail("Min should be 5 after decreaseKey"); return;
-        }
-        if (a.key != 5) {
-            printFail("Node key should be 5"); return;
-        }
+    //     if (heap.findMin().key != 5) {
+    //         printFail("Min should be 5 after decreaseKey"); return;
+    //     }
+    //     if (a.key != 5) {
+    //         printFail("Node key should be 5"); return;
+    //     }
         
-        // Note: This didn't necessarily trigger a cut because 20 was a root. 
-        // Testing actual cuts requires ensuring parent-child relationship first.
+    //     // Note: This didn't necessarily trigger a cut because 20 was a root. 
+    //     // Testing actual cuts requires ensuring parent-child relationship first.
         
-        System.out.println("PASS");
-    }
+    //     System.out.println("PASS");
+    // }
 
-    private static void testDeleteArbitrary() {
-        System.out.print("Test 4: Delete arbitrary node... ");
-        Heap heap = new Heap(true, true);
-        HeapNode n10 = heap.insert(10, "10");
-        HeapNode n20 = heap.insert(20, "20");
-        HeapNode n30 = heap.insert(30, "30");
+    // private static void testDeleteArbitrary() {
+    //     System.out.print("Test 4: Delete arbitrary node... ");
+    //     Heap heap = new Heap(true, true);
+    //     HeapNode n10 = heap.insert(10, "10");
+    //     HeapNode n20 = heap.insert(20, "20");
+    //     HeapNode n30 = heap.insert(30, "30");
         
-        // Delete 20 (middle element)
-        heap.delete(n20);
+    //     // Delete 20 (middle element)
+    //     heap.delete(n20);
         
-        if (heap.size() != 2) {
-            printFail("Size should be 2 after delete"); return;
-        }
-        // Verify min is still 10
-        if (heap.findMin().key != 10) {
-            printFail("Min should be 10"); return;
-        }
+    //     if (heap.size() != 2) {
+    //         printFail("Size should be 2 after delete"); return;
+    //     }
+    //     // Verify min is still 10
+    //     if (heap.findMin().key != 10) {
+    //         printFail("Min should be 10"); return;
+    //     }
         
-        // Delete 10 (min)
-        heap.delete(n10);
-        if (heap.findMin().key != 30) {
-            printFail("Min should be 30 after deleting 10"); return;
-        }
+    //     // Delete 10 (min)
+    //     heap.delete(n10);
+    //     if (heap.findMin().key != 30) {
+    //         printFail("Min should be 30 after deleting 10"); return;
+    //     }
         
-        System.out.println("PASS");
-    }
+    //     System.out.println("PASS");
+    // }
 
-    private static void testMeldHeaps() {
-        System.out.print("Test 5: Meld... ");
-        Heap h1 = new Heap(true, true);
-        h1.insert(10, "h1-1");
-        h1.insert(20, "h1-2");
+    // private static void testMeldHeaps() {
+    //     System.out.print("Test 5: Meld... ");
+    //     Heap h1 = new Heap(true, true);
+    //     h1.insert(10, "h1-1");
+    //     h1.insert(20, "h1-2");
         
-        Heap h2 = new Heap(true, true);
-        h2.insert(5, "h2-1"); // Smaller than h1 min
-        h2.insert(30, "h2-2");
+    //     Heap h2 = new Heap(true, true);
+    //     h2.insert(5, "h2-1"); // Smaller than h1 min
+    //     h2.insert(30, "h2-2");
         
-        int h1Size = h1.size();
-        int h2Size = h2.size();
+    //     int h1Size = h1.size();
+    //     int h2Size = h2.size();
         
-        h1.meld(h2);
+    //     h1.meld(h2);
         
-        if (h1.size() != h1Size + h2Size) {
-            printFail("Size mismatch after meld. Expected " + (h1Size + h2Size) + ", got " + h1.size()); return;
-        }
+    //     if (h1.size() != h1Size + h2Size) {
+    //         printFail("Size mismatch after meld. Expected " + (h1Size + h2Size) + ", got " + h1.size()); return;
+    //     }
         
-        if (h1.findMin().key != 5) {
-            printFail("Min should be 5 after meld"); return;
-        }
+    //     if (h1.findMin().key != 5) {
+    //         printFail("Min should be 5 after meld"); return;
+    //     }
         
-        // Check structural change (roots count should sum up in lazy meld)
-        // h1 had 2 roots, h2 had 2 roots -> Total 4 roots
-        if (h1.numTrees() != 4) {
-            printFail("In lazy meld, roots should simply be concatenated (expected 4)"); return;
-        }
+    //     // Check structural change (roots count should sum up in lazy meld)
+    //     // h1 had 2 roots, h2 had 2 roots -> Total 4 roots
+    //     if (h1.numTrees() != 4) {
+    //         printFail("In lazy meld, roots should simply be concatenated (expected 4)"); return;
+    //     }
         
-        System.out.println("PASS");
-    }
+    //     System.out.println("PASS");
+    // }
 
-    private static void printFail(String msg) {
-        System.out.println("FAIL: " + msg);
-    }
+    // private static void printFail(String msg) {
+    //     System.out.println("FAIL: " + msg);
+    // }
 
 
 //     public static void main(String[] args) { //test insert and findMin
@@ -851,4 +851,151 @@ public class Heap
 //         //test heapifyUp
 //         //build a small heap manually
 //     }
-}
+// ============================================================
+    //        ADVANCED TESTS: FIELDS & CONFIGURATIONS
+    // ============================================================
+
+    // public static void main(String[] args) {
+    //     System.out.println("--- Starting Internal Tests for Heap ---");
+        
+    //     testAdvancedScenarios();
+    // }
+    // // ============================================================
+    // //        ADVANCED TESTS: FIELDS & CONFIGURATIONS
+    // // ============================================================
+
+    // public static void testAdvancedScenarios() {
+    //     System.out.println("--- Starting Advanced Field & Config Tests ---");
+        
+    //     testFieldMaintenance();
+    //     testConfig_LazyMeld_LazyDecKey();       // (true, true)
+    //     testConfig_EagerMeld_LazyDecKey();      // (false, true)
+    //     testConfig_LazyMeld_EagerDecKey();      // (true, false)
+    //     testConfig_EagerMeld_EagerDecKey();     // (false, false)
+        
+    //     System.out.println("\n--- All Advanced Tests Finished Successfully ---");
+    // }
+
+    // private static void testFieldMaintenance() {
+    //     System.out.print("Test 1: Field Maintenance (Size, Roots, Links)... ");
+    //     Heap heap = new Heap(true, true);
+
+    //     heap.insert(10, "A");
+    //     heap.insert(20, "B");
+    //     heap.insert(30, "C");
+        
+    //     if (heap.size() != 3) { printFail("Size should be 3"); return; }
+    //     if (heap.numTrees() != 3) { printFail("Roots should be 3 (Lazy Insert)"); return; }
+
+    //     int linksBefore = heap.totalLinks();
+    //     heap.deleteMin(); // מוחק 10
+        
+    //     if (heap.size() != 2) { printFail("Size should be 2 after delete"); return; }
+    //     if (heap.numTrees() != 1) { printFail("Roots should be 1 after consolidate"); return; }
+    //     if (heap.totalLinks() <= linksBefore) { printFail("TotalLinks should increase after consolidate"); return; }
+
+    //     System.out.println("PASS");
+    // }
+
+    // private static void testConfig_LazyMeld_LazyDecKey() {
+    //     System.out.print("Test 2: Config [LazyMelds=T, LazyDecKey=T]... ");
+        
+    //     // Check Lazy Meld
+    //     Heap h1 = new Heap(true, true);
+    //     h1.insert(10, "A");
+    //     Heap h2 = new Heap(true, true);
+    //     h2.insert(20, "B");
+        
+    //     int linksBefore = h1.totalLinks();
+    //     h1.meld(h2);
+        
+    //     if (h1.numTrees() != 2) { printFail("Lazy Meld should just add roots"); return; }
+    //     if (h1.totalLinks() != linksBefore) { printFail("Lazy Meld should NOT perform links"); return; }
+
+    //     // Check Lazy DecreaseKey (Cuts)
+    //     h1 = new Heap(true, true);
+    //     h1.insert(10, "min");
+    //     HeapNode n20 = h1.insert(20, "n20");
+    //     HeapNode n30 = h1.insert(30, "n30");
+    //     h1.deleteMin(); // 10 deleted, 20 and 30 merge
+        
+    //     HeapNode childNode = (n20.parent != null) ? n20 : n30;
+    //     int cutsBefore = h1.totalCuts();
+    //     int heapifyBefore = h1.totalHeapifyCosts();
+        
+    //     h1.decreaseKey(childNode, 100); 
+        
+    //     if (h1.totalCuts() <= cutsBefore) { printFail("Lazy DecreaseKey should perform Cut"); return; }
+    //     if (h1.totalHeapifyCosts() != heapifyBefore) { printFail("Lazy DecreaseKey should NOT perform HeapifyUp"); return; }
+
+    //     System.out.println("PASS");
+    // }
+
+    // private static void testConfig_EagerMeld_LazyDecKey() {
+    //     System.out.print("Test 3: Config [LazyMelds=F, LazyDecKey=T]... ");
+        
+    //     Heap hA = new Heap(false, true);
+    //     hA.insert(10, "A"); 
+        
+    //     Heap hB = new Heap(false, true);
+    //     hB.insert(20, "B"); 
+        
+    //     int linksBefore = hA.totalLinks();
+    //     hA.meld(hB); 
+    //     if (hA.size() != 2) { printFail("Size check failed"); return; }
+    //     if (hA.numTrees() > 1) { printFail("Eager Meld should consolidate trees"); return; }
+    //     if (hA.totalLinks() <= linksBefore) { printFail("Eager Meld should perform links"); return; }
+        
+    //     System.out.println("PASS");
+    // }
+
+    // private static void testConfig_LazyMeld_EagerDecKey() {
+    //     System.out.print("Test 4: Config [LazyMelds=T, LazyDecKey=F]... ");
+        
+    //     Heap h1 = new Heap(true, false);
+    //     h1.insert(10, "min");
+    //     HeapNode n20 = h1.insert(20, "parent");
+    //     HeapNode n30 = h1.insert(30, "child");
+    //     h1.deleteMin(); 
+        
+    //     HeapNode child = (n20.parent != null) ? n20 : n30;
+    //     int cutsBefore = h1.totalCuts();
+    //     int heapifyBefore = h1.totalHeapifyCosts();
+        
+    //     h1.decreaseKey(child, 100); 
+        
+    //     if (h1.totalCuts() != cutsBefore) { printFail("Eager DecreaseKey should NOT perform Cuts"); return; }
+    //     if (h1.totalHeapifyCosts() <= heapifyBefore) { printFail("Eager DecreaseKey should perform HeapifyUp"); return; }
+
+    //     System.out.println("PASS");
+    // }
+
+    // private static void testConfig_EagerMeld_EagerDecKey() {
+    //     System.out.print("Test 5: Config [LazyMelds=F, LazyDecKey=F]... ");
+        
+    //     Heap h1 = new Heap(false, false);
+    //     h1.insert(100, "A");
+    //     h1.insert(200, "B"); 
+        
+    //     if (h1.numTrees() != 1) { printFail("Eager Insert/Meld should result in 1 tree"); return; }
+        
+    //     HeapNode child = h1.min.child; 
+    //     if (child == null && h1.min.child != null) child = h1.min.child;
+        
+    //     if (child == null) {
+    //          // אם המבנה הפוך ממה שחשבנו (תלוי ב-Link), ננסה למצוא אותו ידנית
+    //          // לצורך הטסט נניח שהם חוברו
+    //     } else {
+    //         int heapifyBefore = h1.totalHeapifyCosts();
+    //         h1.decreaseKey(child, 2000); 
+    //         if (h1.totalHeapifyCosts() <= heapifyBefore) { printFail("Should perform HeapifyUp"); return; }
+    //     }
+        
+    //     System.out.println("PASS");
+    // }
+
+    // // זו הפונקציה שהייתה חסרה:
+    // private static void printFail(String msg) {
+    //     System.out.println("FAIL: " + msg);
+    // }
+    }
