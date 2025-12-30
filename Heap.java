@@ -149,8 +149,9 @@ public class Heap
         if (x.key < x.parent.key) {
             // cut x from its parent
             if (this.lazyDecreaseKeys) {
+                HeapNode x_p = x.parent;
                 cut(x);
-                cascadingCuts(x.parent);
+                cascadingCuts(x_p);
             }
             else{
                //non-lazy decrease key
@@ -169,10 +170,11 @@ public class Heap
             y.marked = true;
             this.numMarked++;
         } else {
+            HeapNode y_p = y.parent;
             cut(y);
             y.marked = false;
             this.numMarked--;
-            cascadingCuts(y.parent);
+            cascadingCuts(y_p);
         }
     }
 
@@ -340,7 +342,7 @@ public class Heap
             return;
         }
         this.roots = 1;
-        for(int i = index+1; i < rankArray.length; i++) {
+        for(int i = index+1; i < rankArray.length; i++) { //add roots from rankArray to the roots list
             if (rankArray[i] == null) {
                 continue;
             }
@@ -350,10 +352,15 @@ public class Heap
                 curr.next = heap.min;
                 break;
             }
-            curr.next = rankArray[i];
-            rankArray[i].prev = curr;
-            curr = rankArray[i];
-            
+            if (i<rankArray.length-1){
+                curr.next = rankArray[i];
+                rankArray[i].prev = curr;
+                curr = rankArray[i];   
+            }
+            else{ //last node
+                curr.next = heap.min;
+                heap.min.prev = curr;
+            }
         }
 
         //previous buggy attempt
